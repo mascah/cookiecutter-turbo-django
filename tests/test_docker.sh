@@ -26,7 +26,7 @@ cd .cache/docker
 sudo rm -rf my_awesome_project
 
 # create the project using the default settings in cookiecutter.json
-uv run cookiecutter ../../ --no-input --overwrite-if-exists "$@"
+uv run cookiecutter ../../ --no-input --overwrite-if-exists project_name="My Awesome Project" "$@"
 cd my_awesome_project
 
 # make sure all images build
