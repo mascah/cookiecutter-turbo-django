@@ -50,7 +50,6 @@ docker compose -f docker-compose.local.yml run --rm django python manage.py make
 
 # Make sure the check doesn't raise any warnings
 docker compose -f docker-compose.local.yml run --rm \
-  --env-file .env \
   -e DJANGO_SECRET_KEY="$(openssl rand -base64 64)" \
   -e REDIS_URL=redis://redis:6379/0 \
   -e DJANGO_AWS_ACCESS_KEY_ID=x \
