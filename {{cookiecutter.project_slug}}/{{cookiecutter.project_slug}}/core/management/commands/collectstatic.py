@@ -1,13 +1,13 @@
 import logging
 
-from django.contrib.staticfiles.management.commands.collectstatic import Command as CollectStaticCommand
+from django.contrib.staticfiles.management.commands import collectstatic
 from django.core.management import call_command
 from django.core.management.base import CommandError
 
 logger = logging.getLogger(__name__)
 
 
-class Command(CollectStaticCommand):
+class Command(collectstatic.Command):
     """
     Extends Django's collectstatic command to also build Tailwind CSS.
 
