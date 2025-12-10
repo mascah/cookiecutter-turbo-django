@@ -10,7 +10,7 @@ set -e
 finish() {
   # Your cleanup code here
   docker compose -f docker-compose.local.yml down --remove-orphans
-  docker volume rm my_awesome_project_my_awesome_project_local_postgres_data
+  docker volume rm turbo_django_turbo_django_local_postgres_data
 
 }
 # the cleanup doesn't work in the github actions
@@ -23,11 +23,11 @@ fi
 mkdir -p .cache/docker
 cd .cache/docker
 
-sudo rm -rf my_awesome_project
+sudo rm -rf turbo_django
 
 # create the project using the default settings in cookiecutter.json
-uv run cookiecutter ../../ --no-input --overwrite-if-exists project_name="My Awesome Project" "$@"
-cd my_awesome_project
+uv run cookiecutter ../../ --no-input --overwrite-if-exists "$@"
+cd turbo_django
 
 # make sure all images build
 docker compose -f docker-compose.local.yml build
@@ -37,7 +37,7 @@ docker compose -f docker-compose.local.yml run django uv lock
 docker compose -f docker-compose.local.yml build
 
 # run the project's type checks
-docker compose -f docker-compose.local.yml run --rm django mypy my_awesome_project
+docker compose -f docker-compose.local.yml run --rm django mypy turbo_django
 
 # run the project's tests
 docker compose -f docker-compose.local.yml run --rm django pytest
@@ -68,7 +68,7 @@ docker build -f ./docker/production/django/Dockerfile -t django-prod .
 
 docker run --rm \
 --env-file .env \
---network my_awesome_project_default \
+--network turbo_django_default \
 -e DJANGO_SECRET_KEY="$(openssl rand -base64 64)" \
 -e REDIS_URL=redis://redis:6379/0 \
 -e DJANGO_AWS_ACCESS_KEY_ID=x \
