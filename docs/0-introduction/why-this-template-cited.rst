@@ -61,7 +61,7 @@ Patterns That Scale
 More importantly, the template establishes **architectural patterns** that scale:
 
 - Modular Django apps as domain boundaries
-- Event-driven communication between modules (in-memory bus that can grow to RabbitMQ/SNS)
+- Event driven communication between modules (in-memory bus that can grow to RabbitMQ/SNS)
 - Shared infrastructure separate from business logic
 - Clear conventions for adding new modules
 - Pathways to extraction when you outgrow the monolith
@@ -81,6 +81,17 @@ The architecture scales not just technically (more requests, more data) but orga
 - The codebase remains navigable as it grows
 
 DHH's Basecamp team demonstrates this works: 12 developers serving millions of users across six platforms with a majestic monolith.
+
+Architectural Governance
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Good intentions aren't enough. Module boundaries erode without enforcement. The template documents patterns for maintaining architectural integrity:
+
+- **import-linter** analyzes your import graph and enforces contracts between modules
+- **Architectural tests** with grimp catch violations in your test suite
+- **Service layer patterns** make boundaries explicit in code
+
+These tools transform "don't import from other modules" from a convention that developers may forget into a CI check that fails the build. See :doc:`/4-guides/module-boundary-enforcement` for implementation details.
 
 Further Reading
 ---------------

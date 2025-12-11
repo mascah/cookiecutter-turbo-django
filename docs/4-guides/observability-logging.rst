@@ -735,6 +735,170 @@ When using the :doc:`event-driven-architecture`, add context to event handlers:
             log.info("handling_prescription_approved")
             # ... handler logic ...
 
+Correlation IDs with django-guid
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+While OpenTelemetry provides trace context, `django-guid <https://github.com/snok/django-guid>`_ offers a simpler middleware-based approach for correlation IDs that integrates directly with Django's logging:
+
+.. code-block:: text
+
+    # requirements/base.txt
+    django-guid==3.5.0
+
+Configure the middleware:
+
+.. code-block:: python
+
+    # config/settings/base.py
+    INSTALLED_APPS = [
+        # ...
+        "django_guid",
+    ]
+
+    MIDDLEWARE = [
+        "django_guid.middleware.guid_middleware",  # Add early in the chain
+        # ... other middleware ...
+    ]
+
+    DJANGO_GUID = {
+        "GUID_HEADER_NAME": "X-Correlation-ID",
+        "RETURN_HEADER": True,  # Include in response headers
+        "EXPOSE_HEADER": True,  # CORS-expose the header
+    }
+
+Access the GUID anywhere in your code:
+
+.. code-block:: python
+
+    from django_guid import get_guid
+
+    def my_service():
+        correlation_id = get_guid()  # Current request's correlation ID
+        # Pass to external services, Celery tasks, etc.
+
+Correlation IDs in Domain Events
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When events flow between modules, include the correlation ID for tracing:
+
+.. code-block:: python
+
+    # {project_slug}/domain_events/base.py
+    from dataclasses import dataclass, field
+    from django_guid import get_guid
+
+    @dataclass
+    class DomainEvent:
+        """Base class for domain events with automatic correlation ID."""
+        correlation_id: str = field(default_factory=lambda: get_guid() or "")
+
+    # {project_slug}/domain_events/events.py
+    @dataclass
+    class OrderPlacedEvent(DomainEvent):
+        order_id: int
+        user_id: int
+        items: list
+
+Event handlers can then use the correlation ID for logging:
+
+.. code-block:: python
+
+    def handle_order_placed(event: OrderPlacedEvent):
+        structlog.contextvars.bind_contextvars(
+            correlation_id=event.correlation_id,
+            event_type="OrderPlaced",
+            order_id=event.order_id,
+        )
+        logger.info("handling_order_placed")
+        # All subsequent logs include the correlation ID
+
+Dead Letter Queue for Failed Events
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+When event handlers fail after all retries, capture the failed event for later analysis and reprocessing:
+
+.. code-block:: python
+
+    # {project_slug}/domain_events/dead_letter.py
+    from django.db import models
+    import json
+
+    class DeadLetterEvent(models.Model):
+        """Store events that failed processing for later analysis."""
+        event_type = models.CharField(max_length=255)
+        event_data = models.JSONField()
+        error_message = models.TextField()
+        correlation_id = models.CharField(max_length=100, blank=True)
+        failed_at = models.DateTimeField(auto_now_add=True)
+        retry_count = models.IntegerField(default=0)
+        reprocessed_at = models.DateTimeField(null=True, blank=True)
+
+        class Meta:
+            indexes = [
+                models.Index(fields=["event_type", "failed_at"]),
+                models.Index(fields=["correlation_id"]),
+            ]
+
+    def store_dead_letter(event, error: Exception) -> DeadLetterEvent:
+        """Store a failed event in the dead letter queue."""
+        return DeadLetterEvent.objects.create(
+            event_type=type(event).__name__,
+            event_data=event.__dict__,
+            error_message=str(error),
+            correlation_id=getattr(event, "correlation_id", ""),
+        )
+
+Integrate with your event bus:
+
+.. code-block:: python
+
+    # {project_slug}/domain_events/bus.py
+    from {project_slug}.domain_events.dead_letter import store_dead_letter
+    import structlog
+
+    logger = structlog.get_logger(__name__)
+
+    class EventBus:
+        def publish(self, event, max_retries: int = 3):
+            """Publish event with retry and dead letter support."""
+            for handler in self._subscribers.get(type(event), []):
+                for attempt in range(max_retries):
+                    try:
+                        handler(event)
+                        break
+                    except Exception as e:
+                        logger.warning(
+                            "handler_failed",
+                            handler=handler.__name__,
+                            attempt=attempt + 1,
+                            error=str(e),
+                        )
+                        if attempt == max_retries - 1:
+                            logger.error("handler_exhausted_retries", handler=handler.__name__)
+                            store_dead_letter(event, e)
+
+Monitor dead letters with alerts:
+
+.. code-block:: python
+
+    # Management command to check dead letter queue
+    # python manage.py check_dead_letters
+
+    from django.core.management.base import BaseCommand
+    from django.utils import timezone
+    from datetime import timedelta
+    from {project_slug}.domain_events.dead_letter import DeadLetterEvent
+
+    class Command(BaseCommand):
+        def handle(self, *args, **options):
+            recent = DeadLetterEvent.objects.filter(
+                failed_at__gte=timezone.now() - timedelta(hours=1),
+                reprocessed_at__isnull=True,
+            )
+            count = recent.count()
+            if count > 0:
+                self.stderr.write(f"WARNING: {count} dead letters in the last hour")
+
 Complementing Sentry
 ^^^^^^^^^^^^^^^^^^^^
 

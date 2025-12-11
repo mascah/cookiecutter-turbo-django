@@ -108,7 +108,7 @@ PostHog Provider
 
 Located at ``apps/{project_slug}/src/features/analytics/contexts/posthog-context.tsx``:
 
-.. code-block:: typescript
+.. code-block:: tsx
 
     import { type ReactNode, createContext, useContext, useEffect } from 'react';
     import posthog from 'posthog-js';
@@ -168,7 +168,7 @@ App Integration
 
 The provider wraps your app in ``App.tsx``:
 
-.. code-block:: typescript
+.. code-block:: tsx
 
     import { PostHogProvider } from '@/features/analytics';
     import { QueryClientProvider } from '@tanstack/react-query';
@@ -519,7 +519,7 @@ Using the PostHog SDK directly:
 
 Using the ``usePostHog`` hook:
 
-.. code-block:: typescript
+.. code-block:: tsx
 
     import { usePostHog } from '@/features/analytics';
 

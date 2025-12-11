@@ -43,7 +43,7 @@ Alpine.js for Interactivity
 
 When you need interactive behavior—dropdowns, modals, form validation—without a full JavaScript framework, `Alpine.js`_ is the recommended addition. Add it via CDN when needed:
 
-.. code-block:: html
+.. code-block:: html+jinja
 
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
 

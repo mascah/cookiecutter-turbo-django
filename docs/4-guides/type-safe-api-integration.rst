@@ -179,7 +179,7 @@ App Setup
 
 Configure React Query in your app root:
 
-.. code-block:: typescript
+.. code-block:: tsx
 
     // src/App.tsx
     import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -244,7 +244,7 @@ Basic Query
 
 Using the generated hook directly:
 
-.. code-block:: typescript
+.. code-block:: tsx
 
     import { useQuery } from '@tanstack/react-query';
     import { tasksListOptions } from '@/services/myproject/@tanstack/react-query.gen';
@@ -405,7 +405,7 @@ Create, update, and delete operations follow the same pattern:
 Using Mutations in Components
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-.. code-block:: typescript
+.. code-block:: tsx
 
     function CreateTaskForm() {
       const createTask = useCreateTask();
@@ -490,7 +490,7 @@ Loading States
 
 Use React Query's loading states for UI feedback:
 
-.. code-block:: typescript
+.. code-block:: tsx
 
     function TaskList() {
       const { tasks, isLoading, isFetching, error } = useTasks();
@@ -537,6 +537,181 @@ The typical development cycle when working with the API:
 - After changing pagination or filter options
 
 **Tip:** Consider adding a pre-commit hook or CI check to ensure the generated client stays in sync with the backend schema.
+
+Alternative: Orval for Full Client Generation
+----------------------------------------------
+
+While ``@hey-api/openapi-ts`` provides types and query hooks, `Orval <https://orval.dev/>`_ is an alternative that generates more comprehensive clients with additional features.
+
+Comparison
+^^^^^^^^^^
+
++---------------------------+--------------------------------+--------------------------------+
+| Feature                   | @hey-api/openapi-ts            | Orval                          |
++===========================+================================+================================+
+| TypeScript types          | Yes                            | Yes                            |
++---------------------------+--------------------------------+--------------------------------+
+| React Query hooks         | Yes                            | Yes                            |
++---------------------------+--------------------------------+--------------------------------+
+| Runtime overhead          | Minimal                        | Slightly more                  |
++---------------------------+--------------------------------+--------------------------------+
+| MSW mocks                 | No                             | Yes (built-in)                 |
++---------------------------+--------------------------------+--------------------------------+
+| Zod schemas               | No                             | Yes (optional)                 |
++---------------------------+--------------------------------+--------------------------------+
+| Custom templates          | Limited                        | Extensive                      |
++---------------------------+--------------------------------+--------------------------------+
+
+**Choose @hey-api/openapi-ts when:**
+
+- You want minimal runtime overhead
+- You're comfortable writing your own fetch wrappers
+- You prefer simpler generated code
+
+**Choose Orval when:**
+
+- You want MSW mocks generated automatically for testing
+- You need Zod schemas for runtime validation
+- You want more customization of generated code
+
+Orval Configuration Example
+^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+.. code-block:: typescript
+
+    // orval.config.ts
+    import { defineConfig } from "orval";
+
+    export default defineConfig({
+      api: {
+        input: {
+          target: "http://localhost:8000/api/schema/",
+        },
+        output: {
+          client: "react-query",
+          target: "./src/lib/api/generated.ts",
+          mock: true,  // Generates MSW handlers
+          override: {
+            mutator: {
+              path: "./src/lib/api/custom-fetch.ts",
+              name: "customFetch",
+            },
+          },
+        },
+      },
+    });
+
+The generated MSW mocks can be used directly in tests:
+
+.. code-block:: typescript
+
+    // src/mocks/handlers.ts
+    import { getTasksMock, getTasksHandler } from "../lib/api/generated.msw";
+
+    export const handlers = [
+      getTasksHandler(),
+      // Add more handlers...
+    ];
+
+Breaking Change Detection with oasdiff
+--------------------------------------
+
+API changes can break frontend clients. `oasdiff <https://github.com/Tufin/oasdiff>`_ detects breaking changes by comparing OpenAPI schemas.
+
+Installation
+^^^^^^^^^^^^
+
+.. code-block:: bash
+
+    # macOS
+    brew install oasdiff
+
+    # Or via Go
+    go install github.com/tufin/oasdiff@latest
+
+    # Or via Docker
+    docker pull tufin/oasdiff
+
+Local Usage
+^^^^^^^^^^^
+
+Compare your current schema against a baseline:
+
+.. code-block:: bash
+
+    # Save current schema as baseline
+    curl http://localhost:8000/api/schema/ > api-schema-baseline.json
+
+    # After making changes, check for breaking changes
+    oasdiff breaking api-schema-baseline.json http://localhost:8000/api/schema/
+
+Breaking changes include:
+
+- Removing or renaming endpoints
+- Adding required parameters
+- Removing response fields
+- Changing field types
+
+CI Integration
+^^^^^^^^^^^^^^
+
+Add oasdiff to your CI pipeline to catch breaking changes before they're merged:
+
+.. code-block:: yaml
+
+    # .github/workflows/ci.yml
+    - name: Check for breaking API changes
+      run: |
+        # Fetch schema from main branch
+        git fetch origin main
+        git show origin/main:api-schema.json > base-schema.json || echo '{}' > base-schema.json
+
+        # Generate current schema
+        docker compose -f docker-compose.local.yml run --rm django \
+          python manage.py spectacular --file /tmp/schema.json
+        docker compose -f docker-compose.local.yml cp django:/tmp/schema.json ./current-schema.json
+
+        # Compare schemas
+        oasdiff breaking base-schema.json current-schema.json --fail-on-diff
+
+The ``--fail-on-diff`` flag causes the command to exit with a non-zero code if breaking changes are detected.
+
+Versioning Schema in Git
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Track your API schema in version control for easy diffing:
+
+.. code-block:: yaml
+
+    # .github/workflows/update-schema.yml
+    name: Update API Schema
+
+    on:
+      push:
+        branches: [main]
+        paths:
+          - "**/serializers.py"
+          - "**/views.py"
+          - "**/api_router.py"
+
+    jobs:
+      update-schema:
+        runs-on: ubuntu-latest
+        steps:
+          - uses: actions/checkout@v4
+
+          - name: Generate schema
+            run: |
+              docker compose -f docker-compose.local.yml run --rm django \
+                python manage.py spectacular --file api-schema.json
+
+          - name: Commit updated schema
+            run: |
+              git config user.name "GitHub Actions"
+              git config user.email "actions@github.com"
+              git add api-schema.json
+              git diff --staged --quiet || git commit -m "chore: update API schema"
+              git push
 
 Summary
 -------

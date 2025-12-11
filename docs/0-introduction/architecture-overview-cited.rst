@@ -51,7 +51,7 @@ Each module is a standard Django app with:
 
 - ``models.py`` - Domain models
 - ``views.py`` or ``api/`` - HTTP interfaces
-- ``services.py`` - Business logic (recommended)
+- ``services.py`` - Business logic (recommended, see :doc:`/4-guides/service-layer-patterns`)
 - ``tests/`` - Module-specific tests
 
 Modules should be cohesive—everything related to a domain concept lives together.
@@ -119,6 +119,10 @@ Manges describes the benefit:
 - Importing models directly from other modules
 - Accessing other modules' internal functions
 - Shared mutable state
+
+**Enforcing boundaries:**
+
+Conventions aren't enough—boundaries erode without tooling. For enforcement strategies including import-linter contracts, architectural tests, and the no-FK database pattern, see :doc:`/4-guides/module-boundary-enforcement`.
 
 What Belongs in a Module
 ^^^^^^^^^^^^^^^^^^^^^^^^

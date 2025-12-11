@@ -46,8 +46,11 @@ This template provides more than boilerplate—it establishes **architectural pa
    :caption: Guides
 
    4-guides/adding-modules
+   4-guides/module-boundary-enforcement
+   4-guides/service-layer-patterns
    4-guides/type-safe-api-integration
    4-guides/event-driven-architecture
+   4-guides/production-patterns
    4-guides/observability-logging
    4-guides/product-analytics
    4-guides/multi-tenancy-organizations
@@ -67,6 +70,7 @@ This template provides more than boilerplate—it establishes **architectural pa
    :caption: About
 
    6-about/maintainer-guide
+   6-about/roadmap
 
 Indices and tables
 ------------------
