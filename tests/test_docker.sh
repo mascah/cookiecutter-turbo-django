@@ -51,7 +51,6 @@ docker compose -f docker-compose.local.yml run --rm django python manage.py make
 # Build frontend assets (required for production checks)
 if [ -f "package.json" ]
 then
-    npm install -g pnpm
     pnpm install
     pnpm run build
 fi

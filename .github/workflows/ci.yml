@@ -52,6 +52,12 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Install dependencies
         run: uv sync --locked
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22.14.0'
+      - name: Install pnpm
+        run: npm install -g pnpm@10.12.4
       - name: Docker ${{ matrix.script.name }}
         run: sh tests/test_docker.sh ${{ matrix.script.args }}
 
