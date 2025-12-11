@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: "daily"
     labels:
-      - "project infrastructure"
+      - "project tooling"
     ignore:
       - dependency-name: "ruff" # updated via PyUp
 
@@ -20,7 +20,7 @@ updates:
     schedule:
       interval: "daily"
     labels:
-      - "project infrastructure"
+      - "ci tooling"
 
   # Update npm packages
   - package-ecosystem: "npm"
@@ -29,7 +29,7 @@ updates:
     schedule:
       interval: "daily"
     labels:
-      - "update"
+      - "template npm packages"
 
   # Enable version updates for Docker
   - package-ecosystem: "docker"
@@ -41,6 +41,6 @@ updates:
     schedule:
       interval: "daily"
     labels:
-      - "update"
+      - "template docker images"
 
   # NOTE: Package ecosystem "docker-compose" can't handle Jinja tags in yml files
