@@ -106,7 +106,7 @@ This approach provides:
 - **Testability**: Modules can be tested in isolation
 - **Scalability path**: Swap the in-memory bus for RabbitMQ/SNS when needed
 
-For simple model lifecycle hooks within a single module, Django signals remain appropriate. Domain events are preferred for cross-module communication.
+For simple model lifecycle hooks within a single module, Django signals remain appropriate. Domain events are preferred for cross module communication.
 
 See :doc:`/4-guides/event-driven-architecture` for comprehensive implementation details, code examples, and guidance on when to use signals vs events.
 
@@ -164,7 +164,7 @@ If a module needs independent scaling or team ownership:
 
 1. The module already has a defined interface
 2. Create a new service with that interface
-3. Replace in-process calls with network calls
+3. Replace in process calls with network calls
 4. Deploy independently
 
 This is straightforward because boundaries are already clear. As Manges notes, Root "decided to first focus on making their app modular" before extracting services, which "set them up to be able to migrate to microservices in the future."
@@ -179,7 +179,7 @@ Before extracting services, consider scaling the monolith:
 - Caching layers
 - Background job workers (Celery)
 
-A well-structured monolith can handle significant scale. DHH's Basecamp serves millions of users with 12 developers—proof that the majestic monolith works.
+A well structured monolith can handle significant scale.
 
 Further Reading
 ---------------

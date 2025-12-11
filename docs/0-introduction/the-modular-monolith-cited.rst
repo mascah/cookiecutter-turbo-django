@@ -6,7 +6,7 @@ This page explains the core architectural philosophy behind this template.
 What is a Modular Monolith?
 ---------------------------
 
-A modular monolith is an architectural approach that combines the deployment simplicity of a monolith with the organizational benefits of well-defined modules.
+A modular monolith is an architectural approach that combines the deployment simplicity of a monolith with the organizational benefits of well defined modules.
 
 ThoughtWorks defines it as:
 
@@ -80,7 +80,7 @@ ThoughtWorks identifies when microservices become valuable:
 - Different parts of your system need to **scale independently**
 - Teams are large enough to **own separate services**
 - You need **different technology stacks** for different problems
-- Your **domain boundaries are well-understood** and stable
+- Your **domain boundaries are well understood** and stable
 
 The modular monolith lets you discover these boundaries before committing to distribution.
 
@@ -116,11 +116,11 @@ The modular monolith gives you the best of both approaches.
 Modularity Without Distribution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You get clear boundaries and separation of concerns without the operational complexity of distributed systems. Modules communicate through well-defined interfaces, but those calls are in-process, not over the network.
+You get clear boundaries and separation of concerns without the operational complexity of distributed systems. Modules communicate through well defined interfaces, but those calls are in-process, not over the network.
 
 In practice, this means using an **in-memory event bus**—modules publish domain events when significant things happen, and other modules subscribe to react. The event bus is a simple pub-sub mechanism that routes events to registered handlers, all within the same process.
 
-ThoughtWorks notes the modular monolith is "significantly easier to design, deploy and manage" because modules ship together with optimized inter-module communication.
+ThoughtWorks notes the modular monolith is "significantly easier to design, deploy and manage" because modules ship together with optimized inter module communication.
 
 The same event contracts that work in-memory can later be routed through RabbitMQ, AWS SNS, or other message brokers when you need independent scaling or service extraction. Your handlers stay the same—only the transport changes.
 
@@ -131,7 +131,7 @@ Manges emphasizes this at Root:
 
     "Our goal was to identify good architectural boundaries before they extracted code out into independent services. This would set them up to be able to migrate to microservices in the future."
 
-When you do need to extract a service—because it needs independent scaling, or a separate team will own it—you have a clean seam. The module already has a defined interface. Extraction is straightforward, not a multi-month rewrite.
+When you do need to extract a service—because it needs independent scaling, or a separate team will own it—you have a clean seam. The module already has a defined interface. Extraction is straightforward, not a multi month rewrite.
 
 Grow Your Architecture With Your Team
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

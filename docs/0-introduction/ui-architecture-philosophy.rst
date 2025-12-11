@@ -6,7 +6,7 @@ This template provides a pragmatic, multi-tier approach to building user interfa
 The Core Principle
 ------------------
 
-Not every page needs React. Not every page can get by with server-rendered HTML. The key is matching your UI approach to the actual requirements:
+Not every page needs React. Not every page can get by with server rendered HTML. The key is matching your UI approach to the actual requirements:
 
 - **Prototyping and simple pages**: Django templates with Tailwind CSS and optional Alpine.js
 - **Highly interactive applications**: Vite-based SPAs (React, Vue) integrated via django-vite
@@ -64,7 +64,7 @@ When you need rich client-side interactivity—complex state management, real-ti
 django-vite Integration
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-The template uses `django-vite`_ to bridge Django and Vite-based frontends. This gives you:
+The template uses `django-vite`_ to bridge Django and Vite based frontends. This gives you:
 
 - **Hot Module Replacement** in development
 - **Manifest-based asset versioning** in production
@@ -127,12 +127,12 @@ Configure the django-vite app in settings:
         BASE_DIR / "apps/myapp/dist",  # Include built assets
     ]
 
-**Best for**: Complex dashboards, real-time applications, data-heavy UIs, anywhere React/Vue makes sense.
+**Best for**: Complex dashboards, real time applications, data-heavy UIs, anywhere React/Vue makes sense.
 
 Tier 3: Pre-Built Static Assets (Marketing)
 -------------------------------------------
 
-For landing pages, marketing sites, and content-heavy pages, pre-rendered static HTML offers the best performance and SEO. The template includes an Astro workspace for this purpose.
+For landing pages, marketing sites, and content heavy pages, pre-rendered static HTML offers the best performance and SEO. The template includes an Astro workspace for this purpose.
 
 Astro Configuration
 ^^^^^^^^^^^^^^^^^^^

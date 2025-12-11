@@ -1,12 +1,17 @@
 Why This Template?
 ==================
 
-This page explains the problems this template solves and why it exists.
+There are many ways to build great software. Rails is fantastic. So is Django. The "majestic monolith" pattern works in any number of frameworks.
+
+This template exists because I use Python a lot, and I've seen the modular monolith pattern work firsthand at startups that scaled from early stage to acquisition in one case and IPO in the other. It's a proven approach, and
+I wanted a solid starting point I could reference and share.
+
+It's also the foundation I reach for when it fits the need for freelance work, personal side projects and experimenting with new ideas. Making it a template makes my own life a little easier at the very least.
 
 The Problem with Platform Architecture
 --------------------------------------
 
-Building software platforms that scale from a handful of developers to dozens—and from thousands of users to millions—is hard. Most teams make one of two common mistakes early on:
+Building software platforms that scale from a handful of developers to dozens, and from thousands of users to millions is hard. Most teams make one of two common mistakes early on:
 
 Premature Microservices Complexity
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -33,19 +38,19 @@ There's a better approach: start with a **modular monolith**. ThoughtWorks descr
 
     "A set of modules with specific functionality, which can be independently developed and tested, while the entire application is deployed as a single unit."
 
-You get the operational simplicity of a single deployable unit with the organizational clarity of well-defined domain boundaries. When (and if) you need to extract services, you have clean seams to work with.
+You get the operational simplicity of a single deployable unit with the organizational clarity of well defined domain boundaries. When (and if) you need to extract services, you have clean seams to work with.
 
 What This Template Provides
 ---------------------------
 
-Production-Ready Foundation
+Production ready foundation
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-This template provides a production-ready Django + Turborepo monorepo with:
+This template provides a production ready Django + Turborepo monorepo with:
 
 - Django backend with sensible defaults
 - Modern frontend workspaces (React, Astro)
-- Docker-based development and deployment
+- Docker based development and deployment
 - CI/CD pipelines
 - Testing infrastructure
 - Observability (Sentry, logging)
