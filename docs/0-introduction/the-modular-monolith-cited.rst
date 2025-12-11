@@ -8,7 +8,7 @@ What is a Modular Monolith?
 
 A modular monolith is an architectural approach that combines the deployment simplicity of a monolith with the organizational benefits of well defined modules.
 
-ThoughtWorks defines it as:
+ThoughtWorks calls it:
 
     "A set of modules with specific functionality, which can be independently developed and tested, while the entire application is deployed as a single unit."
 
@@ -58,7 +58,7 @@ Microservices introduce distributed computing challenges:
 - Complex deployment orchestration
 - Service discovery and load balancing
 
-These aren't insurmountable, but they require significant investment in tooling and expertise.
+These aren't insurmountable, but they require investment in tooling and expertise.
 
 Operational Overhead
 ^^^^^^^^^^^^^^^^^^^^
@@ -70,7 +70,7 @@ Running microservices means:
 - Cross-service debugging
 - Version compatibility management
 
-A small team managing a dozen services spends more time on operations than features. DHH notes that Basecamp's small team serves millions of users without microservices—proof that operational simplicity scales.
+A small team managing a dozen services spends more time on operations than features. DHH notes that Basecamp's small team serves millions of users without microservices.
 
 When Microservices Make Sense
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -116,13 +116,13 @@ The modular monolith gives you the best of both approaches.
 Modularity Without Distribution
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-You get clear boundaries and separation of concerns without the operational complexity of distributed systems. Modules communicate through well defined interfaces, but those calls are in-process, not over the network.
+You get clear boundaries and separation of concerns without the operational complexity of distributed systems. Modules communicate through well-defined interfaces, but those calls are in-process, not over the network.
 
-In practice, this means using an **in-memory event bus**—modules publish domain events when significant things happen, and other modules subscribe to react. The event bus is a simple pub-sub mechanism that routes events to registered handlers, all within the same process.
+In practice, this means using an **in-memory event bus**: modules publish domain events when significant things happen, and other modules subscribe to react. The event bus is a simple pub-sub mechanism that routes events to registered handlers, all within the same process.
 
 ThoughtWorks notes the modular monolith is "significantly easier to design, deploy and manage" because modules ship together with optimized inter module communication.
 
-The same event contracts that work in-memory can later be routed through RabbitMQ, AWS SNS, or other message brokers when you need independent scaling or service extraction. Your handlers stay the same—only the transport changes.
+The same event contracts that work in-memory can later be routed through RabbitMQ, AWS SNS, or other message brokers when you need independent scaling or service extraction. Your handlers stay the same. Only the transport changes.
 
 Strong Boundaries Enable Future Extraction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -131,7 +131,7 @@ Manges emphasizes this at Root:
 
     "Our goal was to identify good architectural boundaries before they extracted code out into independent services. This would set them up to be able to migrate to microservices in the future."
 
-When you do need to extract a service—because it needs independent scaling, or a separate team will own it—you have a clean seam. The module already has a defined interface. Extraction is straightforward, not a multi month rewrite.
+When you do need to extract a service (because it needs independent scaling, or a separate team will own it), you have a clean seam. The module already has a defined interface. Extraction is straightforward, not a multi-month rewrite.
 
 Grow Your Architecture With Your Team
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^

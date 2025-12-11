@@ -1,7 +1,7 @@
 Type-Safe API Integration
 =========================
 
-This guide explains how to achieve end-to-end type safety between your Django REST API and React frontend using OpenAPI code generation. When you change a serializer field in Django, TypeScript will immediately flag any frontend code that needs to be updated.
+Achieve end-to-end type safety between your Django REST API and React frontend using OpenAPI code generation. When you change a serializer field in Django, TypeScript immediately flags any frontend code that needs updating.
 
 Overview
 --------
@@ -13,7 +13,7 @@ The integration pipeline works as follows:
 3. **@hey-api/openapi-ts** generates TypeScript types and React Query hooks from that schema
 4. **Your React components** use those generated hooks with full type safety
 
-This means your frontend always stays in sync with your backend. No more guessing field names, no more runtime type errors from API changes, and no manual type definitions to maintain.
+Your frontend stays in sync with your backend. No more guessing field names, no more runtime type errors from API changes, and no manual type definitions to maintain.
 
 Backend Setup
 -------------

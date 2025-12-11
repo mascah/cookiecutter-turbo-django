@@ -1,14 +1,14 @@
 Event-Driven Architecture
 =========================
 
-This guide explains how to use domain events to decouple modules in your modular monolith, enabling clean communication between bounded contexts without tight coupling.
+Use domain events to decouple modules in your modular monolith. Modules publish events when something significant happens, and other modules subscribe to react.
 
 Overview
 --------
 
 In a modular monolith, modules need to communicate without creating tight dependencies. Direct imports between modules lead to the "spaghetti dependencies" that make monoliths unmaintainable.
 
-The solution is **event-driven architecture**: modules publish events when something significant happens, and other modules subscribe to react to those events. This provides:
+The solution: modules publish events when something happens, and other modules subscribe to react. This provides:
 
 - **Decoupling**: Publishers don't know about subscribers
 - **Testability**: Modules can be tested in isolation
@@ -17,7 +17,7 @@ The solution is **event-driven architecture**: modules publish events when somet
 The Event Bus
 -------------
 
-At the heart of the system is a simple in-memory event bus—a pub-sub mechanism that routes events to registered handlers.
+At the heart of the system is a simple in-memory event bus that routes events to registered handlers.
 
 .. code-block:: python
 
@@ -205,9 +205,9 @@ Handlers receive the event and perform their logic:
 Publishing Events Safely
 ------------------------
 
-**This is the most critical pattern in the entire system.**
+**Always publish events after the transaction commits.**
 
-Events must only be published after the database transaction commits successfully. If you publish an event and then the transaction rolls back, handlers will process an event for data that doesn't exist.
+If you publish before commit and the transaction rolls back, handlers will process an event for data that doesn't exist.
 
 The solution is Django's ``transaction.on_commit()``:
 
@@ -261,9 +261,7 @@ The solution is Django's ``transaction.on_commit()``:
 
             return prescription
 
-**Why the closure matters:**
-
-The inner function ``_publish_event()`` captures the local variables (``request``, ``prescription``) at definition time. When ``transaction.on_commit()`` calls it later, those values are still available. This is called a closure.
+The inner function ``_publish_event()`` captures local variables at definition time, so they're still available when ``on_commit()`` calls it later.
 
 **What happens:**
 
@@ -398,7 +396,7 @@ Domain events are preferred for:
 Scaling the Event Bus
 ---------------------
 
-The in-memory event bus is sufficient for most applications—even those handling significant traffic. However, as your architecture evolves, you may need to scale beyond a single process.
+The in-memory event bus handles most applications, even those with significant traffic. When you need to scale beyond a single process, you can swap in an external broker.
 
 When In-Memory Works
 ^^^^^^^^^^^^^^^^^^^^
@@ -442,12 +440,12 @@ Because your events are explicit classes with clear contracts, migration is stra
     # Future: Settings-based selection
     # EVENT_BUS_BACKEND = "myproject.events.backends.RabbitMQEventBus"
 
-The key insight is that your **event contracts and handler logic stay the same**. Only the transport mechanism changes. This is the power of the modular monolith approach—you build with clear boundaries from day one, making future extraction straightforward.
+Your **event contracts and handler logic stay the same**. Only the transport changes. Build with clear boundaries from day one, and extraction becomes straightforward.
 
-A Note on Event Sourcing
-------------------------
+Event Sourcing (and Why We Don't Use It)
+----------------------------------------
 
-When developers hear "event-driven architecture," many immediately think of **event sourcing**—a pattern often described as the "golden" approach to building systems. Before you go down that path, it's worth understanding what event sourcing actually is, why it's frequently misunderstood, and whether you actually need it.
+When developers hear "event-driven architecture," many think of **event sourcing**. Here's what it actually is and why you probably don't need it.
 
 What Event Sourcing Actually Is
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -467,7 +465,7 @@ Event sourcing is a fundamentally different way of storing data:
     event_store.append(OrderShippedEvent(order_id=order.id, shipped_at=now))
     # Current state = replay all events for this order
 
-The critical distinction: in event sourcing, **events are the database**. You don't have a separate ``Order`` table—you reconstruct order state by replaying its event stream.
+In event sourcing, **events are the database**. You don't have a separate ``Order`` table. You reconstruct order state by replaying its event stream.
 
 What We're Doing Is Different
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -494,7 +492,7 @@ With our approach:
 2. You publish an event to notify other modules (``PrescriptionRequestApprovedEvent``)
 3. The database remains the source of truth
 
-This gives you the **decoupling benefits** of events without the **complexity** of event sourcing.
+You get decoupling without the complexity of event sourcing.
 
 Why Event Sourcing Is Often Misunderstood
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -558,18 +556,18 @@ If someone says "I want event sourcing," ask what problem they're actually solvi
     Add ``created_at``, ``updated_at``, and consider temporal tables or a history table pattern.
 
 **"I've read that event sourcing is best practice"**
-    It's a tool for specific problems, not a universal best practice. Most successful systems use traditional state-based persistence with event-driven communication between components—exactly what this template provides.
+    It's a tool for specific problems. Most successful systems use traditional state-based persistence with event-driven communication between components.
 
-The Path Forward
-^^^^^^^^^^^^^^^^
+If You Ever Need Event Sourcing
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-The patterns in this guide position you well if you ever do need event sourcing:
+The patterns here position you well:
 
 1. Your **domain events are already explicit classes** with clear contracts
 2. Your **modules are decoupled** and communicate via events
 3. You can **introduce event sourcing to specific aggregates** without rewriting everything
 
-Start with event-driven architecture. Add event sourcing to specific bounded contexts only when the problem demands it—and only after you've exhausted simpler alternatives.
+Start with event-driven architecture. Add event sourcing to specific aggregates only when the problem demands it.
 
 Summary
 -------

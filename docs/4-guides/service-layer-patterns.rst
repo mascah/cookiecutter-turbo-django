@@ -1,14 +1,14 @@
 Service Layer Patterns
 ======================
 
-This guide explains how to organize business logic in your Django modules using the services and selectors pattern. This approach, popularized by the `HackSoft Django Styleguide <https://github.com/HackSoftware/Django-Styleguide>`_, creates a clear separation between read and write operations.
+Organize business logic in your Django modules using the services and selectors pattern. This approach, popularized by the `HackSoft Django Styleguide <https://github.com/HackSoftware/Django-Styleguide>`_, separates read and write operations.
 
 Overview
 --------
 
-In a typical Django project, business logic ends up scattered across views, serializers, model methods, signals, and management commands. This makes code hard to test, reuse, and reason about.
+In a typical Django project, business logic ends up scattered across views, serializers, model methods, signals, and management commands. This makes code hard to test and reuse.
 
-The services/selectors pattern establishes a simple rule: **all business logic lives in services (writes) or selectors (reads)**. Everything else—views, serializers, signals—becomes thin glue code that delegates to these functions.
+The services/selectors pattern establishes a simple rule: **all business logic lives in services (writes) or selectors (reads)**. Everything else (views, serializers, signals) becomes thin glue code that delegates to these functions.
 
 The Core Principle
 ------------------

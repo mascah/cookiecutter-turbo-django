@@ -1,7 +1,7 @@
 Production Patterns
 ===================
 
-This guide covers patterns for running your modular monolith safely in production: zero-downtime migrations, feature flags for gradual rollouts, and Celery task patterns for event-driven reliability.
+Patterns for running your modular monolith safely in production: zero-downtime migrations, feature flags for gradual rollouts, and Celery task patterns for reliability.
 
 Zero-Downtime Migrations
 ------------------------
@@ -263,7 +263,7 @@ This ensures handlers make consistent decisions even if the flag changes between
 Celery Patterns for Event-Driven Systems
 ----------------------------------------
 
-Celery integrates naturally with the event-driven architecture. These patterns ensure reliability.
+Celery integrates with the event-driven architecture. These patterns ensure reliability.
 
 Task Routing by Module
 ^^^^^^^^^^^^^^^^^^^^^^

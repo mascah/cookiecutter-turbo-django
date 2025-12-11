@@ -1,12 +1,12 @@
 Module Boundary Enforcement
 ===========================
 
-This guide explains how to enforce module boundaries in your modular monolith using static analysis tools and database design patterns. Without enforcement, well-intentioned boundaries erode over time as developers take shortcuts.
+Enforce module boundaries in your modular monolith using static analysis tools and database design patterns. Without enforcement, boundaries erode as developers take shortcuts.
 
 Overview
 --------
 
-The modular monolith architecture depends on clear boundaries between modules. Philosophy alone isn't enough—you need **tooling** that fails the build when boundaries are violated and **database patterns** that make violations impossible.
+The modular monolith depends on clear boundaries between modules. Philosophy alone isn't enough. You need tooling that fails the build when boundaries are violated and database patterns that make violations impossible.
 
 This guide covers three enforcement layers:
 

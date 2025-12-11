@@ -3,14 +3,14 @@ Observability and Structured Logging
 
 .. index:: logging, observability, tracing, metrics, opentelemetry, structlog
 
-This guide explains how to implement production-ready observability in your Django application using structured logging and OpenTelemetry. You'll learn to send logs, traces, and metrics to backends like CloudWatch, Datadog, or any OTLP-compatible service.
+Implement observability in your Django application using structured logging and OpenTelemetry. Send logs, traces, and metrics to CloudWatch, Datadog, or any OTLP-compatible service.
 
 Overview
 --------
 
-Modern production systems need more than ``print()`` statements and plain text log files. When your application runs across multiple containers, handles thousands of requests per second, and integrates with external services, you need **observability**—the ability to understand what's happening inside your system by examining its outputs.
+Modern production systems need more than ``print()`` statements and plain text log files. When your application runs across multiple containers, handles thousands of requests per second, and integrates with external services, you need **observability**: the ability to understand your system by examining its outputs.
 
-Observability rests on three pillars:
+Observability has three parts:
 
 **Logs**: Discrete events that record what happened. "User 123 logged in." "Payment processing failed."
 
@@ -18,7 +18,7 @@ Observability rests on three pillars:
 
 **Metrics**: Aggregated measurements over time. Request latency percentiles, error rates, queue depths.
 
-This guide focuses primarily on logs and traces. The template already includes Sentry for error tracking, which covers the most critical observability need. This guide extends your capabilities for deeper debugging, performance analysis, and compliance requirements.
+This guide covers logs and traces. The template already includes Sentry for error tracking. Logs and traces extend your capabilities for deeper debugging, performance analysis, and compliance.
 
 The Problem with Plain Text Logs
 --------------------------------
@@ -31,7 +31,7 @@ The default Django logging configuration outputs plain text:
 
 This works for local development but creates problems in production:
 
-**Hard to parse**: Log aggregators like CloudWatch or Datadog work best with structured data. Parsing ``%(module)s %(process)d %(thread)d`` with regex is fragile.
+**Hard to parse**: Log aggregators like CloudWatch or Datadog need structured data. Parsing ``%(module)s %(process)d %(thread)d`` with regex is fragile.
 
 **No context**: Which user? Which request? Which server? You need to manually add this information to every log call.
 
@@ -902,7 +902,7 @@ Monitor dead letters with alerts:
 Complementing Sentry
 ^^^^^^^^^^^^^^^^^^^^
 
-Sentry (if enabled in your project) captures errors automatically. Structured logging and OpenTelemetry complement Sentry by providing:
+Sentry, if enabled, captures errors automatically. Structured logging and OpenTelemetry complement Sentry by providing:
 
 - **Pre-error context**: See what happened before the error
 - **Performance data**: Identify slow operations before they become errors
@@ -933,7 +933,7 @@ To correlate Sentry events with traces, add the trace ID:
 Summary
 -------
 
-Implementing observability requires these components:
+Observability requires these components:
 
 **Packages**:
 
@@ -978,4 +978,4 @@ Implementing observability requires these components:
 | OTEL enabled     | Optional                  | Required                  |
 +------------------+---------------------------+---------------------------+
 
-With these patterns in place, you'll have complete visibility into your application's behavior—from individual log statements to distributed traces across services—while maintaining a pleasant local development experience.
+With these patterns, you get visibility into your application's behavior, from individual log statements to distributed traces across services, while maintaining a pleasant local development experience.

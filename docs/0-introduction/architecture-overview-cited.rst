@@ -73,7 +73,7 @@ Domain Boundaries
 How Modules Communicate
 ^^^^^^^^^^^^^^^^^^^^^^^
 
-Modules should communicate through explicit interfaces, not by reaching into each other's internals. The primary mechanism is **domain events**—an in-memory pub-sub system where modules publish events when significant things happen, and other modules subscribe to react.
+Modules should communicate through explicit interfaces, not by reaching into each other's internals. The primary mechanism is **domain events**, an in-memory pub-sub system where modules publish events when significant things happen, and other modules subscribe to react.
 
 The pattern works like this:
 
@@ -108,7 +108,7 @@ This approach provides:
 
 For simple model lifecycle hooks within a single module, Django signals remain appropriate. Domain events are preferred for cross module communication.
 
-See :doc:`/4-guides/event-driven-architecture` for comprehensive implementation details, code examples, and guidance on when to use signals vs events.
+See :doc:`/4-guides/event-driven-architecture` for implementation details, code examples, and guidance on when to use signals vs events.
 
 Manges describes the benefit:
 
@@ -122,7 +122,7 @@ Manges describes the benefit:
 
 **Enforcing boundaries:**
 
-Conventions aren't enough—boundaries erode without tooling. For enforcement strategies including import-linter contracts, architectural tests, and the no-FK database pattern, see :doc:`/4-guides/module-boundary-enforcement`.
+Conventions aren't enough. Boundaries erode without tooling. For enforcement strategies including import-linter contracts, architectural tests, and the no-FK database pattern, see :doc:`/4-guides/module-boundary-enforcement`.
 
 What Belongs in a Module
 ^^^^^^^^^^^^^^^^^^^^^^^^
@@ -183,7 +183,7 @@ Before extracting services, consider scaling the monolith:
 - Caching layers
 - Background job workers (Celery)
 
-A well structured monolith can handle significant scale.
+A well-structured monolith scales.
 
 Further Reading
 ---------------

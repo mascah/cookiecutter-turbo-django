@@ -3,12 +3,12 @@
 Testing
 ========
 
-We encourage users to build application tests. As best practice, this should be done immediately after documentation of the application being built, before starting on any coding.
+Build tests for your application. As best practice, write tests immediately after documenting, before starting on code.
 
 Pytest
 ------
 
-This project uses the Pytest_, a framework for easily building simple and scalable tests.
+This project uses Pytest_, a framework for building simple and scalable tests.
 After you have set up to `develop locally`_, run the following commands to make sure the testing environment is ready: ::
 
     $ pytest
@@ -48,7 +48,7 @@ If you're running the project locally with Docker, use these commands instead: :
 Testing Event-Driven Code
 -------------------------
 
-The event-driven architecture (see :doc:`event-driven-architecture`) requires specific testing patterns because events are published inside ``transaction.on_commit()`` callbacks.
+The event-driven architecture (see :doc:`event-driven-architecture`) needs specific testing patterns because events are published inside ``transaction.on_commit()`` callbacks.
 
 Testing transaction.on_commit()
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -70,7 +70,7 @@ Django's ``TestCase`` wraps each test in a transaction that never commits, so ``
             self.assertEqual(len(callbacks), 1)
             # Event handlers ran synchronously during the test
 
-The key is ``execute=True``—this runs the callbacks immediately instead of just capturing them.
+The key is ``execute=True``, which runs the callbacks immediately instead of just capturing them.
 
 **With pytest-django**, use the ``django_capture_on_commit_callbacks`` fixture:
 

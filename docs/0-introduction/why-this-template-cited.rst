@@ -80,12 +80,12 @@ The architecture scales not just technically (more requests, more data) but orga
 - Changes are localized, reducing coordination overhead
 - The codebase remains navigable as it grows
 
-DHH's Basecamp team demonstrates this works: 12 developers serving millions of users across six platforms with a majestic monolith.
+DHH's Basecamp team does this: 12 developers serving millions of users across six platforms with a majestic monolith.
 
 Architectural Governance
 ^^^^^^^^^^^^^^^^^^^^^^^^
 
-Good intentions aren't enough. Module boundaries erode without enforcement. The template documents patterns for maintaining architectural integrity:
+Good intentions aren't enough. Module boundaries erode without enforcement. The template documents patterns for maintaining integrity:
 
 - **import-linter** analyzes your import graph and enforces contracts between modules
 - **Architectural tests** with grimp catch violations in your test suite
