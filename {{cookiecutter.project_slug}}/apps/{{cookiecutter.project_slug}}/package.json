@@ -26,7 +26,7 @@
     "sonner": "^2.0.7"
   },
   "devDependencies": {
-    "@hey-api/openapi-ts": "0.87.5",
+    "@hey-api/openapi-ts": "0.89.0",
     "@tailwindcss/vite": "^4.1.17",
     "@types/node": "^24.10.0",
     "@types/react": "^19.2.2",
