@@ -48,6 +48,13 @@ docker compose -f docker-compose.local.yml run --rm django python manage.py make
 # Test support for translations
 docker compose -f docker-compose.local.yml run --rm django python manage.py makemessages --all
 
+# Build frontend assets (required for production checks)
+if [ -f "package.json" ]
+then
+    pnpm install
+    pnpm run build
+fi
+
 # Make sure the check doesn't raise any warnings
 docker compose -f docker-compose.local.yml run --rm \
   -e DJANGO_SECRET_KEY="$(openssl rand -base64 64)" \
@@ -79,10 +86,3 @@ docker run --rm \
 -e MAILGUN_DOMAIN=x \
 -e SENTRY_DSN=https://key@o123.ingest.sentry.io/123 \
 django-prod python manage.py check --settings=config.settings.production --deploy --database default --fail-level WARNING
-
-# Run pnpm build script if package.json is present
-if [ -f "package.json" ]
-then
-    pnpm install
-    pnpm run build
-fi
