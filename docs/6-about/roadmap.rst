@@ -59,14 +59,14 @@ Type Safety
 API Frameworks
 --------------
 
-**use_graphql cookiecutter option**
+**use_graphql template option**
     GraphQL support via graphene-django or strawberry-graphql as an alternative to REST. See :doc:`/4-guides/api-development`.
 
     - Schema generation and playground
     - Integration with service layer patterns
     - DataLoader configuration for N+1 prevention
 
-**use_ninja cookiecutter option**
+**use_ninja template option**
     django-ninja as an alternative API framework for async-first applications.
 
     - FastAPI-style type-hint validation
@@ -116,7 +116,7 @@ Infrastructure as Code
     - Values files for environment configuration
     - Integration with External Secrets Operator
 
-**use_aws cookiecutter option**
+**use_aws template option**
     Optional AWS infrastructure scaffolding during project generation.
 
     - Generates ``infrastructure/`` directory

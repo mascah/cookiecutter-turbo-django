@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).parent.parent
-TEMPLATED_ROOT = ROOT / "{{cookiecutter.project_slug}}"
+TEMPLATED_ROOT = ROOT / "template"
 NVMRC = TEMPLATED_ROOT / ".nvmrc"
 PACKAGE_JSON = TEMPLATED_ROOT / "package.json"
 

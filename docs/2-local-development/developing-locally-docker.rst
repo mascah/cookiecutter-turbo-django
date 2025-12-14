@@ -9,13 +9,13 @@ Prerequisites
 * Docker; if you don't have it yet, follow the `installation instructions`_;
 * Docker Compose; refer to the official documentation for the `installation guide`_.
 * Pre-commit; refer to the official documentation for the `pre-commit`_.
-* Cookiecutter; refer to the official GitHub repository of `Cookiecutter`_
+* Copier; install via ``pip install copier`` or ``pipx install copier``, see `Copier`_
 * (Optional) direnv; for running management commands from your host machine, see `direnv`_.
 
 .. _`installation instructions`: https://docs.docker.com/install/
 .. _`installation guide`: https://docs.docker.com/compose/install/
 .. _`pre-commit`: https://pre-commit.com/#install
-.. _`Cookiecutter`: https://github.com/cookiecutter/cookiecutter
+.. _`Copier`: https://copier.readthedocs.io/
 .. _`direnv`: https://direnv.net/
 
 Before Getting Started
@@ -223,7 +223,7 @@ Notice that the ``container_name`` is generated dynamically using your project s
 Mailpit
 ~~~~~~~
 
-When developing locally you can go with Mailpit_ for email testing provided ``use_mailpit`` was set to ``y`` on setup. To proceed,
+When developing locally you can go with Mailpit_ for email testing provided ``use_mailpit`` was set to ``true`` during generation. To proceed,
 
 #. make sure ``<project_slug>_local_mailpit`` container is up and running;
 
@@ -250,7 +250,7 @@ Celery Flower
 
 Prerequisites:
 
-* ``use_celery`` was set to ``y`` on project initialization.
+* ``use_celery`` was set to ``true`` during project generation.
 
 By default, it's enabled in local development (``docker-compose.local.yml``) through a ``flower`` service. For added security, ``flower`` requires its clients to provide authentication credentials specified in the ``.env`` file as ``CELERY_FLOWER_USER`` and ``CELERY_FLOWER_PASSWORD`` environment variables. Check out ``localhost:5555`` and see for yourself.
 

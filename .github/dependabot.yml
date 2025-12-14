@@ -25,7 +25,7 @@ updates:
   # Update npm packages
   - package-ecosystem: "npm"
     directories:
-      - "{{cookiecutter.project_slug}}/"
+      - "template/"
     schedule:
       interval: "daily"
     labels:
@@ -34,10 +34,10 @@ updates:
   # Enable version updates for Docker
   - package-ecosystem: "docker"
     directories:
-      - "{{cookiecutter.project_slug}}/docker/local/django/"
-      - "{{cookiecutter.project_slug}}/docker/local/docs/"
-      - "{{cookiecutter.project_slug}}/docker/local/uv/"
-      - "{{cookiecutter.project_slug}}/docker/production/django/"
+      - "template/docker/local/django/"
+      - "template/docker/local/docs/"
+      - "template/docker/local/uv/"
+      - "template/docker/production/django/"
     schedule:
       interval: "daily"
     labels:

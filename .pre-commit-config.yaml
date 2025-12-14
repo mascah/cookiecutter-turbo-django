@@ -1,4 +1,4 @@
-exclude: "{{cookiecutter.project_slug}}|CHANGELOG.md"
+exclude: "template|CHANGELOG.md"
 default_stages: [pre-commit]
 minimum_pre_commit_version: "3.2.0"
 
@@ -45,7 +45,7 @@ repos:
         entry: uv run python scripts/lint_generated_project.py
         language: system
         pass_filenames: false
-        files: ^(\{\{cookiecutter\.project_slug\}\}/|cookiecutter\.json|hooks/)
+        files: ^(template/|copier\.yaml|scripts/post_generation\.py)
         stages: [pre-commit]
 
 ci:

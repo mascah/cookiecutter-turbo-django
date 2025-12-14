@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Pre-commit hook to lint the generated cookiecutter template.
+Pre-commit hook to lint the generated Copier template.
 
 Generates the template with default options, runs ruff check on the
 generated project, and exits with non-zero if linting fails.
@@ -30,7 +30,7 @@ def main() -> int:
         print(f"{YELLOW}Generating template with default options...{RESET}")
 
         env = os.environ.copy()
-        env["COOKIECUTTER_TEST_MODE"] = "1"
+        env["COPIER_TEST_MODE"] = "1"
 
         try:
             result = subprocess.run(
@@ -38,11 +38,12 @@ def main() -> int:
                     sys.executable,
                     "-c",
                     f"""
-from cookiecutter.main import cookiecutter
-cookiecutter(
+from copier import run_copy
+run_copy(
     '{root_dir}',
-    output_dir='{output_dir}',
-    no_input=True,
+    '{output_dir}',
+    unsafe=True,
+    vcs_ref='HEAD',
 )
 """,
                 ],
@@ -66,8 +67,9 @@ cookiecutter(
             print(f"{RED}No project was generated{RESET}")
             return 1
 
-        project_dir = generated_dirs[0]
-        print(f"{GREEN}Generated project: {project_dir.name}{RESET}")
+        # Copier generates directly in output_dir, not in a subdirectory
+        project_dir = output_dir
+        print(f"{GREEN}Generated project in: {project_dir}{RESET}")
 
         print(f"{YELLOW}Running ruff check...{RESET}")
 

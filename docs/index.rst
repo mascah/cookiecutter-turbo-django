@@ -9,8 +9,6 @@ This template establishes architectural patterns that work for small teams and l
 
 **New here?** Start with :doc:`0-introduction/why-this-template-cited` to understand the philosophy, or jump to :ref:`template-options` if you're ready to generate a project.
 
-.. _cookiecutter: https://github.com/mascah/cookiecutter-turbo-django
-
 .. toctree::
    :maxdepth: 2
    :caption: Introduction

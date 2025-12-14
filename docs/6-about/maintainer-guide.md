@@ -51,38 +51,38 @@ Triggers on:
 Keeps version numbers synchronized across the template when Dependabot updates certain files. Runs the `scripts/node_version.py` and `scripts/ruff_version.py` scripts to propagate version changes.
 
 Triggers on Dependabot PRs that modify:
-- `{{cookiecutter.project_slug}}/.nvmrc`
-- `{{cookiecutter.project_slug}}/requirements/local.txt`
+- `template/.nvmrc`
+- `template/requirements/local.txt`
 
 ## Template testing
 
-### pytest-cookies
+### Copier Python API
 
-Template tests use [pytest-cookies](https://github.com/hackebrot/pytest-cookies), a pytest plugin for testing Cookiecutter templates:
+Template tests use the [Copier Python API](https://copier.readthedocs.io/) directly:
 
 ```python
-# tests/test_cookiecutter_generation.py
-def test_bake_with_defaults(cookies):
+# tests/test_copier_generation.py
+from copier import run_copy
+
+def test_project_generation(template_path, tmp_path, context):
     """Test template generation with default options."""
-    result = cookies.bake()
-    assert result.exit_code == 0
-    assert result.exception is None
-    assert result.project_path.is_dir()
+    run_copy(str(template_path), str(tmp_path), data=context, unsafe=True, vcs_ref="HEAD")
+    assert tmp_path.is_dir()
 
-def test_bake_with_celery(cookies):
+def test_generation_with_celery(template_path, tmp_path, context):
     """Test template generation with Celery enabled."""
-    result = cookies.bake(extra_context={"use_celery": "y"})
-    assert result.exit_code == 0
-    assert (result.project_path / "config" / "celery_app.py").exists()
+    context["use_celery"] = True
+    run_copy(str(template_path), str(tmp_path), data=context, unsafe=True, vcs_ref="HEAD")
+    assert (tmp_path / "config" / "celery_app.py").exists()
 
-def test_bake_without_drf(cookies):
+def test_generation_without_drf(template_path, tmp_path, context):
     """Test template generation without DRF."""
-    result = cookies.bake(extra_context={"use_drf": "n"})
-    assert result.exit_code == 0
-    assert not (result.project_path / "config" / "api_router.py").exists()
+    context["use_drf"] = False
+    run_copy(str(template_path), str(tmp_path), data=context, unsafe=True, vcs_ref="HEAD")
+    assert not (tmp_path / "config" / "api_router.py").exists()
 ```
 
-The `cookies` fixture handles template rendering in temporary directories.
+The `template_path` and `context` fixtures are defined in `conftest.py`.
 
 ### Matrix testing
 
@@ -97,38 +97,40 @@ Example parametrized test:
 import pytest
 
 @pytest.mark.parametrize("use_celery,use_async,use_heroku", [
-    ("n", "n", "n"),  # Defaults
-    ("y", "n", "n"),  # With Celery
-    ("n", "y", "n"),  # With async
-    ("n", "n", "y"),  # With Heroku
-    ("y", "y", "n"),  # Celery + async
+    (False, False, False),  # Defaults
+    (True, False, False),   # With Celery
+    (False, True, False),   # With async
+    (False, False, True),   # With Heroku
+    (True, True, False),    # Celery + async
 ])
-def test_combinations(cookies, use_celery, use_async, use_heroku):
-    result = cookies.bake(extra_context={
+def test_combinations(template_path, tmp_path, context, use_celery, use_async, use_heroku):
+    context.update({
         "use_celery": use_celery,
         "use_async": use_async,
         "use_heroku": use_heroku,
     })
-    assert result.exit_code == 0
+    run_copy(str(template_path), str(tmp_path), data=context, unsafe=True, vcs_ref="HEAD")
+    assert tmp_path.is_dir()
 ```
 
-### Post-generation hook testing
+### Conditional file exclusion testing
 
-The hooks (`hooks/pre_gen_project.py` and `hooks/post_gen_project.py`) are tested by examining the generated project:
+Copier uses `_exclude` patterns in `copier.yaml` to conditionally exclude files. Tests verify this behavior:
 
 ```python
-def test_hook_removes_celery_files_when_disabled(cookies):
-    """Verify post_gen hook removes Celery files when use_celery=n."""
-    result = cookies.bake(extra_context={"use_celery": "n"})
+def test_celery_files_excluded_when_disabled(template_path, tmp_path, context):
+    """Verify Celery files are excluded when use_celery=False."""
+    context["use_celery"] = False
+    run_copy(str(template_path), str(tmp_path), data=context, unsafe=True, vcs_ref="HEAD")
 
-    # These files should be removed by post_gen_project.py
-    assert not (result.project_path / "config" / "celery_app.py").exists()
-    assert not (result.project_path / "docker" / "celery" / "worker" / "start").exists()
+    # These files should be excluded by _exclude patterns in copier.yaml
+    assert not (tmp_path / "config" / "celery_app.py").exists()
+    assert not (tmp_path / "docker" / "local" / "django" / "celery").exists()
 
-def test_hook_generates_secrets(cookies):
-    """Verify post_gen hook generates random secrets in .env."""
-    result = cookies.bake()
-    env_file = result.project_path / ".envs" / ".local" / ".django"
+def test_post_generation_generates_secrets(template_path, tmp_path, context):
+    """Verify post_generation.py generates random secrets in .env."""
+    run_copy(str(template_path), str(tmp_path), data=context, unsafe=True, vcs_ref="HEAD")
+    env_file = tmp_path / ".env"
     content = env_file.read_text()
 
     # Secret should be present and not a placeholder
@@ -136,40 +138,18 @@ def test_hook_generates_secrets(cookies):
     assert "{{" not in content  # No unexpanded template vars
 ```
 
-## Template version tracking
+## Template updates with Copier
 
-### cruft
-
-[cruft](https://cruft.github.io/cruft/) helps users keep their generated projects in sync with template updates:
+This template uses [Copier](https://copier.readthedocs.io/) for template management with built-in update support:
 
 ```bash
-# In a generated project, check if updates are available
-cruft check
-
-# Apply template updates with conflict resolution
-cruft update
-```
-
-cruft stores template metadata in `.cruft.json`, including the template URL and the commit hash used to generate the project.
-
-**For maintainers**: When making breaking changes, consider documenting migration steps in release notes so users can manually resolve conflicts during `cruft update`.
-
-### Copier alternative
-
-[Copier](https://copier.readthedocs.io/) is an alternative to Cookiecutter with built-in update support and migration scripts. Consider migrating to Copier if:
-
-- The template evolves frequently
-- Users struggle with manual upgrade conflicts
-- You need migration scripts between template versions
-
-Copier's update flow:
-
-```bash
-# In a generated project
-copier update
+# In a generated project, update to the latest template version
+copier update --trust
 
 # Apply a specific template version
-copier update --vcs-ref v2.0.0
+copier update --trust --vcs-ref v2.0.0
 ```
 
-The main advantage over cruft is Copier's native support for migrations—scripts that run during updates to handle breaking changes automatically.
+Copier stores template metadata in `.copier-answers.yml`, including the template URL and the commit hash used to generate the project.
+
+**For maintainers**: When making breaking changes, consider using Copier's [migration scripts](https://copier.readthedocs.io/en/stable/migrations/) feature to handle upgrades automatically.

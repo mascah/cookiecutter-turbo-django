@@ -6,7 +6,7 @@ from pathlib import Path
 import tomllib
 
 ROOT = Path(__file__).parent.parent
-TEMPLATED_ROOT = ROOT / "{{cookiecutter.project_slug}}"
+TEMPLATED_ROOT = ROOT / "template"
 REQUIREMENTS_LOCAL_TXT = TEMPLATED_ROOT / "requirements" / "local.txt"
 PYPROJECT_TOML = ROOT / "pyproject.toml"
 

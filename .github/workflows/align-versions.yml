@@ -3,8 +3,8 @@ name: Align Versions
 on:
   pull_request:
     paths:
-      - "{{cookiecutter.project_slug}}/.nvmrc"
-      - "{{cookiecutter.project_slug}}/requirements/local.txt"
+      - "template/.nvmrc"
+      - "template/requirements/local.txt"
   workflow_dispatch:
 
 jobs:

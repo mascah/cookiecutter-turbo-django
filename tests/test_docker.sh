@@ -1,5 +1,5 @@
 #!/bin/sh
-# this is a very simple script that tests the docker configuration for cookiecutter-turbo-django
+# this is a very simple script that tests the docker configuration for the Turbo Django template
 # it is meant to be run from the root directory of the repository, eg:
 # sh tests/test_docker.sh
 
@@ -25,8 +25,8 @@ cd .cache/docker
 
 sudo rm -rf turbo_django
 
-# create the project using the default settings in cookiecutter.json
-uv run cookiecutter ../../ --no-input --overwrite-if-exists "$@"
+# create the project using the default settings in copier.yaml
+uv run copier copy ../../ turbo_django --trust --defaults "$@"
 cd turbo_django
 
 # make sure all images build

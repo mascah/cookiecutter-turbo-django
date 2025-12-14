@@ -3,9 +3,9 @@
 Project Generation Options
 ==========================
 
-This page describes all the template options that will be prompted by the `cookiecutter CLI`_ prior to generating your project.
+This page describes all the template options that will be prompted by the `Copier CLI`_ prior to generating your project.
 
-.. _cookiecutter CLI: https://github.com/cookiecutter/cookiecutter
+.. _Copier CLI: https://copier.readthedocs.io/
 
 project_name:
     Your project's human-readable name, capitals and spaces allowed.
@@ -87,7 +87,7 @@ keep_local_envs_in_vcs:
 
 debug:
     Indicates whether the project should be configured for debugging.
-    This option is relevant for Cookiecutter Turbo Django developers only.
+    This option is relevant for template developers only.
 
 
 .. _MIT: https://opensource.org/licenses/MIT

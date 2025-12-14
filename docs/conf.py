@@ -240,9 +240,9 @@ texinfo_documents = [
         "index",
         "Cookiecutter Turbo Django",
         "Cookiecutter Turbo Django documentation",
-        "Daniel Roy Greenfeld",
+        "Mike Ascah",
         "Cookiecutter Turbo Django",
-        "A Cookiecutter template for creating production-ready Django projects quickly.",
+        "A Copier template for creating production-ready Django projects quickly.",
         "Miscellaneous",
     )
 ]
