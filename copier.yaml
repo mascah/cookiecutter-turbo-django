@@ -52,7 +52,6 @@ _exclude:
 # Post-generation tasks
 _tasks:
   - command: python {{ _copier_conf.src_path }}/scripts/post_generation.py
-    when: "{{ not _copier_conf.unsafe }}"
 
 # =============================================================================
 # Project Variables

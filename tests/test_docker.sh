@@ -25,8 +25,14 @@ cd .cache/docker
 
 sudo rm -rf platform_django
 
+# Build data arguments for copier (convert key=value to -d key=value)
+DATA_ARGS=""
+for arg in "$@"; do
+  DATA_ARGS="$DATA_ARGS -d $arg"
+done
+
 # create the project using the default settings in copier.yaml
-uv run copier copy ../../ platform_django --trust --defaults "$@"
+uv run copier copy ../../ platform_django --trust --defaults $DATA_ARGS
 cd platform_django
 
 # make sure all images build
