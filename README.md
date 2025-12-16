@@ -27,7 +27,7 @@ Heavily inspired by [cookiecutter-django](https://github.com/cookiecutter/cookie
 curl -LsSf https://astral.sh/uv/install.sh | sh
 
 # Generate your project using uvx (runs copier without installing)
-uvx copier copy gh:mascah/platform-django-template my_project --trust
+uvx --with jinja2-time copier copy gh:mascah/platform-django-template my_project --trust
 
 # Follow the prompts, then see your generated project's README
 ```
@@ -38,7 +38,7 @@ One of Copier's key advantages is the ability to update existing projects:
 
 ```bash
 cd my_project
-uvx copier update --trust
+uvx --with jinja2-time copier update --trust
 ```
 
 ## Documentation
