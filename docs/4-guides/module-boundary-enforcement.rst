@@ -299,7 +299,7 @@ The no-FK pattern is enforced by code review and the constraint that ``ForeignKe
 See Also
 --------
 
-- :doc:`/0-introduction/the-modular-monolith-cited` — Philosophy behind the modular monolith
+- :doc:`/0-introduction/the-modular-monolith` — Philosophy behind the modular monolith
 - :doc:`adding-modules` — How to create new modules
 - :doc:`event-driven-architecture` — Cross-module communication without imports
 - :doc:`service-layer-patterns` — Organizing business logic

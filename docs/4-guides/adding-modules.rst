@@ -8,7 +8,7 @@ Overview
 
 In the modular monolith pattern, your application is organized into **modules**: self-contained Django apps that encapsulate specific business domains. Unlike microservices, these modules run in the same process and share a database, but they maintain clear boundaries through explicit interfaces.
 
-For background on why we use this architecture, see :doc:`/0-introduction/the-modular-monolith-cited`.
+For background on why we use this architecture, see :doc:`/0-introduction/the-modular-monolith`.
 
 Project Layout
 --------------
@@ -135,7 +135,7 @@ Modules should communicate through explicit interfaces rather than direct import
 See Also
 --------
 
-- :doc:`/0-introduction/the-modular-monolith-cited` — Philosophy behind the modular monolith
-- :doc:`/0-introduction/architecture-overview-cited` — Full architecture overview
+- :doc:`/0-introduction/the-modular-monolith` — Philosophy behind the modular monolith
+- :doc:`/0-introduction/architecture-overview` — Full architecture overview
 - :doc:`event-driven-architecture` — Decoupling modules with domain events
 - :doc:`multi-tenancy-organizations` — Example of adding an organizations module

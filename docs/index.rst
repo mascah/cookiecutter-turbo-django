@@ -7,15 +7,15 @@ A project template for building **modular monolith** Django applications with mo
 
 This template establishes architectural patterns that work for small teams and large organizations. The modular monolith approach means deploying a single unit while keeping clear boundaries between domains.
 
-**New here?** Start with :doc:`0-introduction/why-this-template-cited` to understand the philosophy, or jump to :ref:`template-options` if you're ready to generate a project.
+**New here?** Start with :doc:`0-introduction/why-this-template` to understand the philosophy, or jump to :ref:`template-options` if you're ready to generate a project.
 
 .. toctree::
    :maxdepth: 2
    :caption: Introduction
 
-   0-introduction/why-this-template-cited
-   0-introduction/the-modular-monolith-cited
-   0-introduction/architecture-overview-cited
+   0-introduction/why-this-template
+   0-introduction/the-modular-monolith
+   0-introduction/architecture-overview
    0-introduction/ui-architecture-philosophy
 
 .. toctree::

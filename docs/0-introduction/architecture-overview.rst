@@ -38,11 +38,7 @@ The ``{project_slug}/`` directory is the heart of the modular monolith. Each sub
     ├── notifications/   # Email, push notifications (you add this)
     └── core/            # Core product domain (you add this)
 
-Add new modules as sibling directories to ``users/``.
-
-This structure follows what Dan Manges describes in `The Modular Monolith: Rails Architecture`_:
-
-    "Our code is structured by domain concept, which especially helps new team members navigate and understand the project."
+Add new modules as sibling directories to ``users/``. Code structured by domain concept helps new team members navigate and understand the project quickly.
 
 Django Apps as Domain Modules
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -65,7 +61,7 @@ Cross-cutting concerns live outside the domain modules:
 - ``docker/`` - Container definitions
 - ``packages/`` - Shared frontend code
 
-This separation reflects DHH's observation in `The Majestic Monolith`_ that a well-structured monolith lets developers "keep it all in their head."
+This separation keeps domain modules focused on business logic while infrastructure concerns are handled consistently across the application.
 
 Domain Boundaries
 -----------------
@@ -106,13 +102,9 @@ This approach provides:
 - **Testability**: Modules can be tested in isolation
 - **Scalability path**: Swap the in-memory bus for RabbitMQ/SNS when needed
 
-For simple model lifecycle hooks within a single module, Django signals remain appropriate. Domain events are preferred for cross module communication.
+For simple model lifecycle hooks within a single module, Django signals remain appropriate. Domain events are preferred for cross-module communication.
 
 See :doc:`/4-guides/event-driven-architecture` for implementation details, code examples, and guidance on when to use signals vs events.
-
-Manges describes the benefit:
-
-    "The boundary between stateful and stateless logic helps them think about implementing some of their most complex business logic in pure Ruby [Python], completely separated from Rails [Django]."
 
 **Avoid:**
 
@@ -159,7 +151,7 @@ When your domain expands, add a new module:
 4. Define its public interface (services, APIs)
 5. Keep dependencies explicit
 
-ThoughtWorks notes that with a modular monolith, teams can "make changes across services efficiently; it doesn't take 5 PRs across 5 projects with deployment order dependencies to implement a feature."
+With a modular monolith, teams can make changes across modules efficiently—it doesn't take 5 PRs across 5 projects with deployment order dependencies to implement a feature.
 
 Extracting Modules to Services
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -168,10 +160,10 @@ If a module needs independent scaling or team ownership:
 
 1. The module already has a defined interface
 2. Create a new service with that interface
-3. Replace in process calls with network calls
+3. Replace in-process calls with network calls
 4. Deploy independently
 
-This is straightforward because boundaries are already clear. As Manges notes, Root "decided to first focus on making their app modular" before extracting services, which "set them up to be able to migrate to microservices in the future."
+This is straightforward because boundaries are already clear. Focus on making your app modular first, and you'll be set up to migrate to microservices in the future if needed.
 
 Horizontal Scaling the Monolith
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -183,7 +175,15 @@ Before extracting services, consider scaling the monolith:
 - Caching layers
 - Background job workers (Celery)
 
-A well-structured monolith scales.
+A well-structured monolith scales further than you might expect.
+
+Supporting Research
+-------------------
+
+This approach draws from several practitioners who've written about their experiences:
+
+- **Dan Manges (Root Insurance)**: "Our code is structured by domain concept, which especially helps new team members navigate and understand the project."
+- **Dan Manges (Root Insurance)**: "The boundary between stateful and stateless logic helps them think about implementing some of their most complex business logic in pure Python, completely separated from Django."
 
 Further Reading
 ---------------

@@ -6,9 +6,7 @@ This page explains the core architectural philosophy behind this template.
 What is a Modular Monolith?
 ---------------------------
 
-A modular monolith is an architectural approach that combines the deployment simplicity of a monolith with the organizational benefits of well defined modules.
-
-ThoughtWorks calls it:
+A modular monolith is an architectural approach that combines the deployment simplicity of a monolith with the organizational benefits of well-defined modules. ThoughtWorks describes it as:
 
     "A set of modules with specific functionality, which can be independently developed and tested, while the entire application is deployed as a single unit."
 
@@ -42,14 +40,12 @@ Modules share infrastructure (database connections, caching, web server) but mai
 Why Not Microservices (Yet)?
 ----------------------------
 
-Microservices are powerful for large organizations with mature platform teams. For most teams, they're premature.
+Microservices are powerful for large organizations with mature platform teams. For most teams starting out, they introduce complexity that outweighs their benefits.
 
 Distributed Computing Complexity
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-DHH emphasizes in `The Majestic Monolith`_ that distribution should be avoided unless absolutely necessary:
-
-    "If you can keep it all in one app, you have a much better chance of keeping it all in your head too."
+Distribution should be avoided unless the benefits clearly outweigh the costs. If you can keep it all in one app, you have a much better chance of keeping it all in your head too.
 
 Microservices introduce distributed computing challenges:
 
@@ -70,12 +66,12 @@ Running microservices means:
 - Cross-service debugging
 - Version compatibility management
 
-A small team managing a dozen services spends more time on operations than features. DHH notes that Basecamp's small team serves millions of users without microservices.
+A small team managing a dozen services often spends more time on operations than features.
 
 When Microservices Make Sense
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-ThoughtWorks identifies when microservices become valuable:
+Microservices become valuable when:
 
 - Different parts of your system need to **scale independently**
 - Teams are large enough to **own separate services**
@@ -92,11 +88,7 @@ A traditional monolith without internal structure creates its own problems.
 Spaghetti Dependencies
 ^^^^^^^^^^^^^^^^^^^^^^
 
-Dan Manges describes the danger at Root Insurance in `The Modular Monolith: Rails Architecture`_:
-
-    "We've heard of teams ending up with a Distributed Monolith: code in independent services that is as difficult to work with as a Monolith. One underlying cause of that is poor architecture."
-
-Without clear boundaries, code depends on code arbitrarily. A change in the billing module breaks authentication because someone took a shortcut. The dependency graph becomes a tangled mess.
+Without clear boundaries, code depends on code arbitrarily. A change in the billing module breaks authentication because someone took a shortcut. The dependency graph becomes a tangled mess—what some call ending up with a "Distributed Monolith" even with code in a single repository.
 
 Difficulty Onboarding New Developers
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
@@ -120,27 +112,32 @@ You get clear boundaries and separation of concerns without the operational comp
 
 In practice, this means using an **in-memory event bus**: modules publish domain events when significant things happen, and other modules subscribe to react. The event bus is a simple pub-sub mechanism that routes events to registered handlers, all within the same process.
 
-ThoughtWorks notes the modular monolith is "significantly easier to design, deploy and manage" because modules ship together with optimized inter module communication.
+This is significantly easier to design, deploy, and manage because modules ship together with optimized inter-module communication.
 
 The same event contracts that work in-memory can later be routed through RabbitMQ, AWS SNS, or other message brokers when you need independent scaling or service extraction. Your handlers stay the same. Only the transport changes.
 
 Strong Boundaries Enable Future Extraction
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Manges emphasizes this at Root:
-
-    "Our goal was to identify good architectural boundaries before they extracted code out into independent services. This would set them up to be able to migrate to microservices in the future."
-
 When you do need to extract a service (because it needs independent scaling, or a separate team will own it), you have a clean seam. The module already has a defined interface. Extraction is straightforward, not a multi-month rewrite.
+
+The goal is to identify good architectural boundaries before extracting code into independent services. This sets you up to migrate to microservices in the future if needed.
 
 Grow Your Architecture With Your Team
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Start simple. Add modules as your domain expands. Extract services when the organizational or technical need is clear. Your architecture evolves with your business rather than constraining it.
 
-As Manges summarizes:
+The Modular Monolith is simple in its concepts, but powerful in enabling teams to scale their software.
 
-    "The Modular Monolith is simple in its concepts, but powerful in enabling us to scale our team and software."
+Supporting Research
+-------------------
+
+This approach draws from several practitioners who've written about their experiences:
+
+- **DHH (Basecamp)**: "If you can keep it all in one app, you have a much better chance of keeping it all in your head too."
+- **Dan Manges (Root Insurance)**: "We've heard of teams ending up with a Distributed Monolith: code in independent services that is as difficult to work with as a Monolith. One underlying cause of that is poor architecture."
+- **ThoughtWorks**: The modular monolith is "significantly easier to design, deploy and manage" because modules ship together with optimized inter-module communication.
 
 Further Reading
 ---------------
